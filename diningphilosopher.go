@@ -55,12 +55,18 @@ func main() {
     // create the states
     states = make([]int, N)
 
+    // create a WaitGroup to wait for philosopher goroutines to finish
+    var wg sync.WaitGroup
+
     // start the philosophers
     for i := 0; i < N; i++ {
-        go philosopher(i)
+        wg.Add(1)
+        go func(i int) {
+            philosopher(i)
+            wg.Done()
+        }(i)
     }
 
-    // for loop to keep the program running
-    for {
-    }
+    // Wait for all philosopher goroutines to finish
+    wg.Wait()
 }
